@@ -59,6 +59,7 @@ TEST(New_entry, eng) {
     free(new_entry_->name);
     free(new_entry_->manufacturer);
     free(new_entry_);
+    fclose(input);
 }
 
 TEST(New_entry, rus) {
@@ -73,6 +74,7 @@ TEST(New_entry, rus) {
     free(new_entry_->name);
     free(new_entry_->manufacturer);
     free(new_entry_);
+    fclose(input);
 }
 
 TEST(Fill, fill) {
@@ -89,6 +91,7 @@ TEST(Fill, fill) {
     free(catalogue->name);
     free(catalogue->manufacturer);
     free(catalogue);
+    fclose(input);
 }
 
 TEST(Fill, fill_1_find_1) {
@@ -104,6 +107,7 @@ TEST(Fill, fill_1_find_1) {
     free(catalogue->name);
     free(catalogue->manufacturer);
     free(catalogue);
+    fclose(input);
 }
 
 TEST(Fill, fill_2_find_1) {
@@ -121,6 +125,7 @@ TEST(Fill, fill_2_find_1) {
         free(catalogue[i].manufacturer);
     }
     free(catalogue);
+    fclose(input);
 }
 
 TEST(Fill, fill_2_find_2) {
@@ -138,4 +143,5 @@ TEST(Fill, fill_2_find_2) {
         free(catalogue[i].manufacturer);
     }
     free(catalogue);
+    fclose(input);
 }

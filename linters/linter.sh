@@ -31,6 +31,3 @@ print_header "RUN cpplint"
 check_log "cpplint --extensions=c toys_catalogue_lib/* main.c" "Can't open for reading"
 
 print_header "LINTERS SUCCESS"
-
-print_header "RUN valgrind"
-check_log "valgrind --tool=memcheck --leak-check=yes cmake-build-debug/tests/test_toys_search" ""
