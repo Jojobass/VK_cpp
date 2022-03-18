@@ -5,7 +5,7 @@ coverage:
 	lcov -t "tests/test_toys_search" -o coverage.info -c -d toys_catalogue_lib/ && \
 	genhtml -o report coverage.info && \
 	cd report && \
-	cp toys_catalogue_lib/index.html ../.. && \
+	cp index.html ../.. && \
 	python3 -m http.server 8000
 
 check:
