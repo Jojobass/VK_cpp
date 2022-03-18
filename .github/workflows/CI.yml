@@ -26,7 +26,7 @@ jobs:
     - name: install essentials
       run: |
         sudo apt update -y && \
-        sudo apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev
+        sudo apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev lcov
     
     - name: install cpplint
       run: pip install cpplint
