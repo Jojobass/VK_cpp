@@ -64,8 +64,12 @@ jobs:
 
     - name: run tests
       run: cmake-build-debug/tests/test_toys_search
+      
+    - name: analyze coverage
+      run: make coverage
           
-    - uses: codecov/codecov-action@v2
+    - name: codecov
+      uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         files: cmake-build-debug/coverage.info # optional
