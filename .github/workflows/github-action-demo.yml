@@ -1,17 +1,78 @@
-name: GitHub Actions Demo
-on: [push]
+name: Ubuntu
+
+on:
+  push:
+    branches: [ main ]
+
+
+env:
+  INSTALL_LOCATION: .local
+
 jobs:
-  Explore-GitHub-Actions:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    - uses: actions/checkout@v3
+      
+    - name: cache dependencies
+      uses: actions/cache@v2
+      id: cache
+      with:
+        path: ${{ github.workspace }}/${{ env.INSTALL_LOCATION }}
+        key: ${{ runner.os }}-dependencies
+
+    - name: install essentials
+      run: |
+        apt update -y && \
+        apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev
+    
+    - name: install cpplint
+      run: pip install cpplint
+      
+    - name: install valgrind
+      run: apt install valgrind
+    
+    - name: install GoogleTest
+      if: ${{ steps.cache.output.cache-hit != 'true' }}
+      run: |
+        cd ..
+        git clone https://github.com/google/googletest.git --branch release-1.10.0
+        cd googletest
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/$INSTALL_LOCATION
+        cmake --build build --config Release
+        cmake --build build --target install --config Release
+
+    - name: build
+      run: |
+        mkdir cmake-build-debug
+        cd cmake-build-debug
+        cmake ..
+        cmake --build .
+        cd ..
+
+    - name: run tests
+      run: cmake-build-debug/tests/test_toys_search
+      
+    - name: run linters
+      run: make check
+      
+    - name: run valgrind
+      run: make valgrind
+      
+    - name: run sanitizer with address, undefined, leak
+      run: make sanitizer_address
+      
+    - name: run sanitizer with thread
+      run: make sanitizer_thread
+      
+    - name: run fbinfer
+      run: make fbinfer
+      
+    - name: run scan-build
+      run: make scan-build
+
+
+#    - name: Code coverage using Codecov 
+#      run: bash <(curl -s https://codecov.io/bash) 
