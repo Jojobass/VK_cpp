@@ -22,6 +22,6 @@ function check_log() {
 }
 
 print_header "RUN valgrind"
-check_log "valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all cmake-build-debug/tests/test_toys_search" "loss record"
+check_log "valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all cmake-build-debug/tests/test_toys_search" "Invalid"
 
 print_header "VALGRIND SUCCESS"

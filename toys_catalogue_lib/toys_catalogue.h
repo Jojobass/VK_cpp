@@ -12,6 +12,8 @@ typedef struct {
     char *manufacturer;
 } entry;
 
+int get_string(FILE *input_file, char **string, char delimiter);
+
 void find_toys_from_country(entry cat[], int size, char const *country);
 
 entry *prefill();

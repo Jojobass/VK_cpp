@@ -22,4 +22,6 @@ function check_log() {
 }
 
 print_header "RUN sanitizers"
-check_log "g++ -fsanitize=address,undefined -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error tests/test_toys_search.cpp" ""
+check_log "g++ -Wall -g -pthread -fsanitize=address,undefined -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error tests/test_toys_search.cpp -Itoys_catalogue_lib -lgtest_main -lgtest -lpthread -lcat_lib -Lcmake-build-debug/toys_catalogue_lib -lgcov" "undefined reference"
+
+print_header "SANITIZERS SUCCESS"
