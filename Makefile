@@ -2,6 +2,12 @@ coverage:
 	cd cmake-build-debug && \
 	rm -f coverage.info && \
 	rm -rf report && \
+	lcov -t "tests/test_toys_search" -o coverage.info -c -d toys_catalogue_lib/
+
+coverage_server:
+	cd cmake-build-debug && \
+	rm -f coverage.info && \
+	rm -rf report && \
 	lcov -t "tests/test_toys_search" -o coverage.info -c -d toys_catalogue_lib/ && \
 	genhtml -o report coverage.info && \
 	cd report && \
