@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ stable ]
 
 
 env:
@@ -52,7 +52,7 @@ jobs:
         sudo ln -s "/opt/infer-linux64-v$VERSION/bin/infer" /usr/local/bin/infer
         
     - name: install scan-build
-      run: scan-build -h
+      run: sudo apt install clang-tools
 
     - name: build
       run: |
