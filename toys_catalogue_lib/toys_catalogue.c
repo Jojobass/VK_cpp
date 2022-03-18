@@ -81,7 +81,7 @@ void find_toys_from_country(entry cat[], int size, char const *country) {
 
 entry *prefill() {
     entry *catalogue;
-    if((catalogue = malloc(sizeof(entry) * 5)) == NULL){
+    if ((catalogue = malloc(sizeof(entry) * 5)) == NULL) {
         perror("Allocation error!");
         return NULL;
     }
@@ -122,7 +122,7 @@ entry *prefill() {
 
 entry *new_entry(FILE *stream_) {
     entry *new_entry_;
-    if((new_entry_ = malloc(sizeof(entry))) == NULL){
+    if ((new_entry_ = malloc(sizeof(entry))) == NULL) {
         perror("Allocation error!");
         return NULL;
     }
@@ -153,7 +153,7 @@ entry *new_entry(FILE *stream_) {
 
 entry *fill(int *size, FILE *stream_) {
     entry *catalogue;
-    if((catalogue = malloc(sizeof(entry))) == NULL){
+    if ((catalogue = malloc(sizeof(entry))) == NULL) {
         perror("Allocation error!");
         return NULL;
     }
@@ -177,7 +177,7 @@ entry *fill(int *size, FILE *stream_) {
 
         do {
             printf("Добавить еще одну запись? (y/n)\n");
-            y_n = (char)fgetc(stream_);
+            y_n = (char) fgetc(stream_);
             fgetc(stream_);
         } while (y_n != 'y' && y_n != 'n');
 
