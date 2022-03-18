@@ -25,14 +25,14 @@ jobs:
 
     - name: install essentials
       run: |
-        apt update -y && \
-        apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev
+        sudo apt update -y && \
+        sudo apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev
     
     - name: install cpplint
       run: pip install cpplint
       
     - name: install valgrind
-      run: apt install valgrind
+      run: sudo apt install valgrind
     
     - name: install GoogleTest
       if: ${{ steps.cache.output.cache-hit != 'true' }}
