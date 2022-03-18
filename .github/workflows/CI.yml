@@ -1,4 +1,4 @@
-name: Ubuntu
+name: CI
 
 on:
   push:
@@ -43,6 +43,13 @@ jobs:
         cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/$INSTALL_LOCATION
         cmake --build build --config Release
         cmake --build build --target install --config Release
+        
+    - name: install fbinfer
+      run: |
+        VERSION=1.1.0; \
+        curl -sSL "https://github.com/facebook/infer/releases/download/v$VERSION/infer-linux64-v$VERSION.tar.xz" \
+        | sudo tar -C /opt -xJ && \
+        sudo ln -s "/opt/infer-linux64-v$VERSION/bin/infer" /usr/local/bin/infer
 
     - name: build
       run: |
