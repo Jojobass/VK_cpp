@@ -1,15 +1,15 @@
 coverage:
 	cd cmake-build-debug && \
-	rm -f coverage.info && \
+	rm -f coverage.txt && \
 	rm -rf report && \
-	lcov -t "tests/test_toys_search" -o coverage.info -c -d toys_catalogue_lib/
+	lcov -t "tests/test_toys_search" -o coverage.txt -c -d toys_catalogue_lib/
 
 coverage_server:
 	cd cmake-build-debug && \
-	rm -f coverage.info && \
+	rm -f coverage.txt && \
 	rm -rf report && \
-	lcov -t "tests/test_toys_search" -o coverage.info -c -d toys_catalogue_lib/ && \
-	genhtml -o report coverage.info && \
+	lcov -t "tests/test_toys_search" -o coverage.txt -c -d toys_catalogue_lib/ && \
+	genhtml -o report coverage.txt && \
 	cd report && \
 	cp index.html ../.. && \
 	python3 -m http.server 8000
