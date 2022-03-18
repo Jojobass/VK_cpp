@@ -29,7 +29,7 @@ int grow_buffer(char **buffer, size_t old_length, size_t new_length) {
 }
 
 int get_string(FILE *input_file, char **string, char delimiter) {
-    //  Initial allocation with check
+    //  Начальная аллокация
     if (grow_buffer(string, 0, DEFAULT_INITIAL_LENGTH) != 0) {
         return 1;
     }
@@ -80,7 +80,12 @@ void find_toys_from_country(entry cat[], int size, char const *country) {
 }
 
 entry *prefill() {
-    entry *catalogue = malloc(sizeof(entry) * 5);
+    entry *catalogue;
+    if((catalogue = malloc(sizeof(entry) * 5)) == NULL){
+        perror("Allocation error!");
+        return NULL;
+    }
+
     {
         catalogue[0].name = "LEGO City 123956";
         catalogue[0].price = 1560;
@@ -116,29 +121,17 @@ entry *prefill() {
 }
 
 entry *new_entry(FILE *stream_) {
-    entry *new_entry_ = malloc(sizeof(entry));
+    entry *new_entry_;
+    if((new_entry_ = malloc(sizeof(entry))) == NULL){
+        perror("Allocation error!");
+        return NULL;
+    }
 
     printf("Введите название товара: ");
-//    new_entry_->name = malloc(sizeof(char) * 100 + 1);
-//    fscanf(stream_, "%100[^\n]", new_entry_->name);
     if (get_string(stream_, &new_entry_->name, '\n')) {
         free(new_entry_);
         return NULL;
     }
-//    fgetc(stream_);
-//    new_entry_->name[100] = '\0';
-//
-//    char *buf;
-//    if ((buf = realloc(new_entry_->name, strlen(new_entry_->name) * sizeof(char) + 1)) == NULL) {
-//        perror("Reallocation error!\n");
-//        free(new_entry_->name);
-//        free(new_entry_);
-//        free(buf);
-//        return NULL;
-//    } else {
-//        new_entry_->name = buf;
-//        new_entry_->name[strlen(new_entry_->name)] = '\0';
-//    }
 
     printf("Введите стоимость: ");
     fscanf(stream_, "%ud", &new_entry_->price);
@@ -149,37 +142,24 @@ entry *new_entry(FILE *stream_) {
     fgetc(stream_);
 
     printf("Введите страну производства: ");
-//    new_entry_->manufacturer = malloc(sizeof(char) * 50 + 1);
-//    fscanf(stream_, "%50[^\n]", new_entry_->manufacturer);
     if (get_string(stream_, &new_entry_->manufacturer, '\n')) {
         free(new_entry_->name);
         free(new_entry_);
         return NULL;
     }
-//    fgetc(stream_);
-//    new_entry_->manufacturer[50] = '\0';
-
-//    if ((buf = realloc(new_entry_->manufacturer,
-//                       strlen(new_entry_->manufacturer) * sizeof(char) + 1)) == NULL) {
-//        perror("Reallocation error!\n");
-//        free(new_entry_->manufacturer);
-//        free(new_entry_->name);
-//        free(new_entry_);
-//        free(buf);
-//        return NULL;
-//    } else {
-//        new_entry_->manufacturer = buf;
-//        new_entry_->manufacturer[strlen(new_entry_->manufacturer)] = '\0';
-//    }
 
     return new_entry_;
 }
 
 entry *fill(int *size, FILE *stream_) {
-    entry *catalogue = malloc(sizeof(entry));
+    entry *catalogue;
+    if((catalogue = malloc(sizeof(entry))) == NULL){
+        perror("Allocation error!");
+        return NULL;
+    }
 
     int cnt = 0;
-    char y_n = 'y';
+    char y_n;
     do {
         entry *buf;
         if ((buf = new_entry(stream_)) == NULL) {
@@ -197,7 +177,7 @@ entry *fill(int *size, FILE *stream_) {
 
         do {
             printf("Добавить еще одну запись? (y/n)\n");
-            y_n = fgetc(stream_);
+            y_n = (char)fgetc(stream_);
             fgetc(stream_);
         } while (y_n != 'y' && y_n != 'n');
 

@@ -101,7 +101,7 @@ TEST(New_entry, eng) {
     char *input_str_1 = (char *) "Test product\n1000\n10\nTest country\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *buf;
-    if ((buf = new_entry(input)) == NULL) {
+    if ((buf = new_entry(input)) == nullptr) {
         fclose(input);
     } else {
         entry *new_entry_ = buf;
@@ -121,7 +121,7 @@ TEST(New_entry, rus) {
     char *input_str_1 = (char *) "Тестовая игрушка\n1000\n10\nТестовая страна\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *buf;
-    if ((buf = new_entry(input)) == NULL) {
+    if ((buf = new_entry(input)) == nullptr) {
         fclose(input);
     } else {
         entry *new_entry_ = buf;
@@ -142,7 +142,7 @@ TEST(Fill, fill) {
     char *input_str_1 = (char *) "Test product\n1000\n10\nTest country\nn\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *catalogue;
-    if ((catalogue = fill(&size, input)) == NULL) {
+    if ((catalogue = fill(&size, input)) == nullptr) {
         fclose(input);
     } else {
         entry test = {(char *) "Test product", 1000, 10, (char *) "Test country"};
@@ -162,7 +162,7 @@ TEST(Fill, fill_1_find_1) {
     char *input_str_1 = (char *) "Test product\n1000\n10\nTest country\nn\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *catalogue;
-    if ((catalogue = fill(&size, input)) == NULL) {
+    if ((catalogue = fill(&size, input)) == nullptr) {
         fclose(input);
     } else {
         char *input_str_2 = (char *) "Test country";
@@ -182,7 +182,7 @@ TEST(Fill, fill_2_find_1) {
     char *input_str_1 = (char *) "Test product 1\n1000\n10\nTest country 1\ny\nTest product 2\n2000\n20\nTest country 2\nn\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *catalogue;
-    if ((catalogue = fill(&size, input)) == NULL) {
+    if ((catalogue = fill(&size, input)) == nullptr) {
         fclose(input);
     } else {
         char *input_str_2 = (char *) "Test country 1";
@@ -204,7 +204,7 @@ TEST(Fill, fill_2_find_2) {
     char *input_str_1 = (char *) "Test product 1\n1000\n10\nTest country 1\ny\nTest product 2\n2000\n0\nTest country 1\nn\n";
     FILE *input = fmemopen(input_str_1, strlen(input_str_1), "r");
     entry *catalogue;
-    if ((catalogue = fill(&size, input)) == NULL) {
+    if ((catalogue = fill(&size, input)) == nullptr) {
         fclose(input);
     } else {
         char *input_str_2 = (char *) "Test country 1";

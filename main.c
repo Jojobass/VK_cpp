@@ -26,21 +26,10 @@ int menu(FILE *stream_) {
     } while (choice != 1 && choice != 2);
 
     printf("Введите название страны для поиска:\n");
-    char *country/* = malloc(sizeof(char) * 50)*/;
+    char *country;
     if (get_string(stream_, &country, '\n')) {
         return 1;
     }
-//  fscanf(stream_, "%50[^\n]", country);
-//  fgetc(stream_);
-//
-//  char *buf;
-//  if ((buf = realloc(country, strlen(country) * sizeof(char))) == NULL) {
-//    perror("Reallocation error!\n");
-//    free(country);
-//    return 1;
-//  } else {
-//    country = buf;
-//  }
 
     find_toys_from_country(catalogue, catalogue_size, country);
 
