@@ -10,7 +10,7 @@ message("CAT_LIB_LIBRARIES = ${CAT_LIB_LIBRARIES}")
 add_executable(${PROJECT_NAME} main.c)
 
 set(CMAKE_C_FLAGS "-fprofile-arcs -ftest-coverage -fPIC -O0")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage -lgcov" )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CAT_LIB_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CAT_LIB_LIBRARIES})

@@ -1,6 +1,12 @@
 #include "toys_catalogue.h"
 
+#define PREFILL_SIZE 5
+
 int menu(FILE *stream_) {
+    if(stream_ == NULL){
+        perror("Strean is NULL!");
+        return 1;
+    }
     int choice = 0;
     entry *catalogue;
     int catalogue_size = 0;
@@ -14,7 +20,7 @@ int menu(FILE *stream_) {
         switch (choice) {
             case 1:
                 catalogue = prefill();
-                catalogue_size = 5;
+                catalogue_size = PREFILL_SIZE;
                 break;
             case 2:
                 if ((catalogue = fill(&catalogue_size, stream_)) == NULL)

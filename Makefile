@@ -11,7 +11,6 @@ coverage_server:
 	lcov -t "tests/test_toys_search" -o coverage.txt -c -d toys_catalogue_lib/ && \
 	genhtml -o report coverage.txt && \
 	cd report && \
-	cp index.html ../.. && \
 	python3 -m http.server 8000
 
 check:
@@ -34,7 +33,8 @@ fbinfer:
 	cd cmake-build-debug && \
 	cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .. && \
 	cd .. && \
-	infer run --fail-on-issue --compilation-database cmake-build-debug/compile_commands.json
+	infer run --fail-on-issue --compilation-database cmake-build-debug/compile_commands.json && \
+	rm -rf cmake-build-debug
 
 scan-build:
 	rm -rf cmake-build-debug/ && \

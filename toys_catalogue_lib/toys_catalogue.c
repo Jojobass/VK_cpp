@@ -2,7 +2,7 @@
 
 #define DEFAULT_INITIAL_LENGTH 4
 
-int grow_buffer(char **buffer, size_t old_length, size_t new_length) {
+int static grow_buffer(char **buffer, size_t old_length, size_t new_length) {
     if (new_length <= old_length) {
         perror("Buffer length error!");
         return 2;
