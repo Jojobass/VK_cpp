@@ -3,7 +3,7 @@
 #define PREFILL_SIZE 5
 
 int menu(FILE *stream_) {
-    if(stream_ == NULL){
+    if (stream_ == NULL) {
         perror("Strean is NULL!");
         return 1;
     }
