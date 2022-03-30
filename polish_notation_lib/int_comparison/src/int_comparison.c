@@ -343,6 +343,7 @@ int pass_bool_expr(char** polish, int polish_size, int x) {
             ++results_size;
             continue;
         }
+
         int buf = use_operator(polish[i], results[results_size - 2], results[results_size - 1]);
         resize_buffer_ints(&results, results_size, results_size - 1);
         --results_size;
