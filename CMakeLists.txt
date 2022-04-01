@@ -6,22 +6,15 @@ set(CMAKE_C_STANDARD 11)
 add_subdirectory(bool_expr_lib/parallel)
 add_subdirectory(bool_expr_lib/successive)
 add_subdirectory(polish_notation_lib/int_comparison)
-
-
-message("BOOL_EXPR_LIB_INCLUDE_DIRS = ${BOOL_EXPR_LIB_INCLUDE_DIRS}")
-message("BOOL_EXPR_LIB_LIBRARIES = ${BOOL_EXPR_LIB_LIBRARIES}")
+add_subdirectory(tests)
 
 add_executable(${PROJECT_NAME} main.c)
 
 set(CMAKE_C_FLAGS "-fprofile-arcs -ftest-coverage -fPIC -O0")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage -lgcov" )
 
-#target_include_directories(${PROJECT_NAME} PUBLIC ${POLISH_NOTATION_INT_COMP_LIB_INCLUDE_DIRS})
-#target_link_libraries(${PROJECT_NAME} PRIVATE ${POLISH_NOTATION_INT_COMP_LIB_LIBRARIES})
-
 option(WITH_PARALLEL "Using shared library" ON)
 if(WITH_PARALLEL)
-#    target_include_directories(${PROJECT_NAME} PUBLIC ${BOOL_EXPR_SUCCESSIVE_LIB_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${BOOL_EXPR_PARALLEL_LIB_LIBRARIES} ${POLISH_NOTATION_INT_COMP_LIB_LIBRARIES})
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${BOOL_EXPR_SUCCESSIVE_LIB_LIBRARIES} ${POLISH_NOTATION_INT_COMP_LIB_LIBRARIES})

@@ -84,7 +84,7 @@ bool check_valid(char **expr_) {
                     if ((*expr_)[i - 1] == '=' && (*expr_)[i - 2] != '=') { return false; }
                 }
             }
-            if (i >= strlen(*expr_) - 5) { return false; }
+            if (i > strlen(*expr_) - 5) { return false; }
             if ((*expr_)[i + 1] == '(') { ++and_or_brackets; }
             continue;
         }
@@ -120,6 +120,10 @@ bool check_valid(char **expr_) {
             if ((*expr_)[i + 1] != '=') { return false; }
             if (!isdigit((*expr_)[i - 1]) && (*expr_)[i - 1] != 'x' &&
                 (*expr_)[i - 1] != ')') { return false; }
+            if ((*expr_)[i - 1] == ')') {
+                if ((*expr_)[i + 2] != '(') { return false; }
+                ++and_or_num;
+            }
             ++i;
             continue;
         }
@@ -132,13 +136,13 @@ bool check_valid(char **expr_) {
             }
             continue;
         }
-        if (isdigit((*expr_)[i])) {
+        if (isdigit((*expr_)[i]) || (*expr_)[i] == '-') {
             if (i != 0) {
                 if (strchr("><(=", (*expr_)[i - 1]) == NULL) { return false; }
             }
-            while (isdigit((*expr_)[i])) {
+            do {
                 ++i;
-            }
+            } while (isdigit((*expr_)[i]));
             --i;
             continue;
         }
@@ -148,6 +152,7 @@ bool check_valid(char **expr_) {
             }
             continue;
         }
+        return false;
     }
     if (brackets != 0) { return false; }
     if (and_or_brackets != and_or_num * 2) { return false; }
@@ -196,16 +201,16 @@ int detect_functions(char *expr, char ***polish) {
     int oper_arr_size = 0;
     for (int i = 0; i < strlen(expr) + 1; ++i) {
         int string_size = 0;
-        if (isdigit(expr[i])) {
+        if (isdigit(expr[i]) || expr[i] == '-') {
             resize_buffer_string_array(polish, num_of_elems, num_of_elems + 1);
             resize_buffer_string(&((*polish)[num_of_elems]), string_size, string_size + 1);
             ++string_size;
-            while (isdigit(expr[i])) {
+            do {
                 resize_buffer_string(&((*polish)[num_of_elems]), string_size, string_size + 1);
                 (*polish)[num_of_elems][string_size - 1] = expr[i];
                 ++string_size;
                 ++i;
-            }
+            } while (isdigit(expr[i]));
             (*polish)[num_of_elems][string_size - 1] = '\0';
             ++num_of_elems;
             --i;
@@ -272,19 +277,19 @@ int detect_functions(char *expr, char ***polish) {
     return num_of_elems;
 }
 
-bool and(bool a, bool b) { return a && b; }
+static bool and(bool a, bool b) { return a && b; }
 
-bool or(bool a, bool b) { return a || b; }
+static bool or(bool a, bool b) { return a || b; }
 
-bool equal(int a, int b) { return a == b; }
+static bool equal(int a, int b) { return a == b; }
 
-bool lt(int a, int b) { return a < b; }
+static bool lt(int a, int b) { return a < b; }
 
-bool mt(int a, int b) { return a > b; }
+static bool mt(int a, int b) { return a > b; }
 
-bool let(int a, int b) { return a <= b; }
+static bool let(int a, int b) { return a <= b; }
 
-bool met(int a, int b) { return a >= b; }
+static bool met(int a, int b) { return a >= b; }
 
 static int resize_buffer_ints(int **buffer, size_t old_length, size_t new_length) {
     // Allocating new buffer with check
@@ -314,7 +319,7 @@ static int resize_buffer_ints(int **buffer, size_t old_length, size_t new_length
     return 0;
 }
 
-int use_operator(char *oper, int a, int b) {
+static int use_operator(char *oper, int a, int b) {
     if (!strcmp(oper, "<")) { return lt(a, b); }
     if (!strcmp(oper, "<=")) { return let(a, b); }
     if (!strcmp(oper, ">")) { return mt(a, b); }
@@ -326,11 +331,11 @@ int use_operator(char *oper, int a, int b) {
     return -1;
 }
 
-int pass_bool_expr(char** polish, int polish_size, int x) {
+int pass_bool_expr(char **polish, int polish_size, int x) {
     int *results;
     int results_size = 0;
     for (int i = 0; i < polish_size; ++i) {
-        if (isdigit(polish[i][0])) {
+        if (isdigit(polish[i][0]) || polish[i][0] == '-') {
             char *p;
             resize_buffer_ints(&results, results_size, results_size + 1);
             results[results_size] = (int) strtol(polish[i], &p, 10);
@@ -349,7 +354,7 @@ int pass_bool_expr(char** polish, int polish_size, int x) {
         --results_size;
         results[results_size - 1] = buf;
     }
-    if (results_size != 1){
+    if (results_size != 1) {
         perror("Decoding error!\n");
         return -1;
     }
