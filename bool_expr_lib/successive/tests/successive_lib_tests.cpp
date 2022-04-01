@@ -2,7 +2,7 @@
 #include <ctime>
 
 extern "C" {
-#include "bool_expr_lib.h"
+#include "bool_expr_successive_lib.h"
 }
 
 TEST(GET_NUM_PASSED, size_1) {

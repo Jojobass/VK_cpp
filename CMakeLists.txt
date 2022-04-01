@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 11)
 add_subdirectory(bool_expr_lib/parallel)
 add_subdirectory(bool_expr_lib/successive)
 add_subdirectory(polish_notation_lib/int_comparison)
-add_subdirectory(tests)
+add_subdirectory(stress)
 
 add_executable(${PROJECT_NAME} main.c)
 

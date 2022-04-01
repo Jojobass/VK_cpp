@@ -1,5 +1,6 @@
-#include "bool_expr_lib.h"
-#include "../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+#include "bool_expr_successive_lib.h"
+//#include "../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+#include "polish_int_comp_lib.h"
 
 int get_num_passed(char *expr, int *arr, size_t arr_size) {
     int num = 0;

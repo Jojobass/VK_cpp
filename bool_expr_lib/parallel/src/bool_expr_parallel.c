@@ -1,8 +1,10 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "bool_expr_lib.h"
-#include "../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+#include "bool_expr_parallel_lib.h"
+//#include "../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+//#include "../../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+#include "polish_int_comp_lib.h"
 
 static int get_part(char** polish, int polish_size, int *arr, size_t part_size){
     int num = 0;
@@ -12,7 +14,7 @@ static int get_part(char** polish, int polish_size, int *arr, size_t part_size){
     return num;
 }
 
-int get_num_passed(char *expr, int *arr, size_t arr_size) {
+int get_num_passed_parallel(char *expr, int *arr, size_t arr_size) {
     if (!check_valid(&expr)) {
         perror("NOT VALID\n");
         return -1;
