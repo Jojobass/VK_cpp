@@ -13,11 +13,17 @@ static int resize_buffer_string_array(char ***buffer, size_t old_length, size_t 
             // Copying data from the old buffer to the new one
             memcpy(new_buffer, *buffer, old_length * sizeof(char *));
             // Freeing the old memory
+//            for (int i = 0; i < old_length; ++i) {
+//                free((*buffer)[i]);
+//            }
             free(*buffer);
         } else {
             // Copying data from the old buffer to the new one
             memcpy(new_buffer, *buffer, new_length * sizeof(char *));
             // Freeing the old memory
+//            for (int i = 0; i < old_length-1; ++i) {
+//                free((*buffer)[i]);
+//            }
             free(*buffer);
         }
     }
@@ -54,9 +60,9 @@ static int resize_buffer_string(char **buffer, size_t old_length, size_t new_len
     return 0;
 }
 
-static int remove_white_spaces(char **str) {
+static int remove_whitespaces(char **str) {
     int i = 0, j = 0;
-    char *res = malloc(strlen(*str) + 1);
+    char *res = (char*)malloc(strlen(*str) + 1);
     while ((*str)[i]) {
         if ((*str)[i] != ' ') {
             res[j] = (*str)[i];
@@ -66,12 +72,13 @@ static int remove_white_spaces(char **str) {
         i++;
     }
     res[j] = '\0';
+//    free(*str);
     *str = res;
     return 0;
 }
 
 bool check_valid(char **expr_) {
-    remove_white_spaces(expr_);
+    remove_whitespaces(expr_);
     int brackets = 0;
     int and_or_brackets = 0;
     int and_or_num = 0;
@@ -274,6 +281,10 @@ int detect_functions(char *expr, char ***polish) {
             }
         }
     }
+    for(int i=0; i<oper_arr_size; ++i){
+        free(functions[i]);
+    }
+    free(functions);
     return num_of_elems;
 }
 
@@ -358,5 +369,7 @@ int pass_bool_expr(char **polish, int polish_size, int x) {
         perror("Decoding error!\n");
         return -1;
     }
-    return results[0];
+    int res = results[0];
+    free(results);
+    return res;
 }

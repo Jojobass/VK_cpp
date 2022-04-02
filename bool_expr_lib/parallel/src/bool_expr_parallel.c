@@ -1,12 +1,11 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "bool_expr_parallel_lib.h"
-//#include "../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
-//#include "../../../polish_notation_lib/int_comparison/include/polish_int_comp_lib.h"
+#include "bool_expr_lib.h"
+
 #include "polish_int_comp_lib.h"
 
-static int get_part(char** polish, int polish_size, int *arr, size_t part_size){
+static int get_part(char **polish, int polish_size, int *arr, size_t part_size) {
     int num = 0;
     for (size_t i = 0; i < part_size; ++i) {
         if (pass_bool_expr(polish, polish_size, arr[i]) == 1) { ++num; }
@@ -14,7 +13,9 @@ static int get_part(char** polish, int polish_size, int *arr, size_t part_size){
     return num;
 }
 
-int get_num_passed_parallel(char *expr, int *arr, size_t arr_size) {
+int get_num_passed(char *expr, int *arr, size_t arr_size) { return -2; }
+
+int get_num_passed_(char *expr, int *arr, size_t arr_size) {
     if (!check_valid(&expr)) {
         perror("NOT VALID\n");
         return -1;
@@ -29,17 +30,19 @@ int get_num_passed_parallel(char *expr, int *arr, size_t arr_size) {
     pid_t pids[num_of_processes];
 //    массив, который могут читать и изменять все процессы
     int *num = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,
-                             -1, 0);
+                    -1, 0);
     if (num == MAP_FAILED) { return -1; }
 
 //    создание процессов и одновременная проверка ~равных частей массива
     for (int i = 0; i < num_of_processes; ++i) {
         pids[i] = fork();
         if (pids[i] == 0) {
-            if (i != num_of_processes - 1){
-                 *num += get_part(polish, polish_size, &(arr[(arr_size / num_of_processes) * i]), arr_size / num_of_processes);
+            if (i != num_of_processes - 1) {
+                *num += get_part(polish, polish_size, &(arr[(arr_size / num_of_processes) * i]),
+                                 arr_size / num_of_processes);
             } else {
-                 *num += get_part(polish, polish_size, &(arr[(arr_size / num_of_processes) * i]), arr_size / num_of_processes + arr_size % num_of_processes);
+                *num += get_part(polish, polish_size, &(arr[(arr_size / num_of_processes) * i]),
+                                 arr_size / num_of_processes + arr_size % num_of_processes);
             }
 
             exit(EXIT_SUCCESS);
@@ -57,5 +60,9 @@ int get_num_passed_parallel(char *expr, int *arr, size_t arr_size) {
         perror("Unmapping error!\n");
         return -1;
     }
+    for(int i=0; i<polish_size; ++i){
+        free(polish[i]);
+    }
+    free(polish);
     return res;
 }

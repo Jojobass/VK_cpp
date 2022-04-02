@@ -16,5 +16,5 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC ../include ../../../polish_notation_lib/int_comparison/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ../../include ../../../polish_notation_lib/int_comparison/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE bool_expr_parallel_lib polish_notation_int_comp_lib GTest::gtest_main)
