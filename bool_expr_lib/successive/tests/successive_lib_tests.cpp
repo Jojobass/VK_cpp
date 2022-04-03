@@ -12,6 +12,7 @@ TEST(GET_NUM_PASSED, size_1) {
     EXPECT_EQ(get_num_passed(expr, arr, 1), 0);
     arr[0] = 2;
     EXPECT_EQ(get_num_passed(expr, arr, 1), 1);
+//    free(expr);
     free(arr);
 }
 

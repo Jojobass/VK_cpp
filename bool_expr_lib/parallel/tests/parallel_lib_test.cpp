@@ -2,6 +2,7 @@
 #include <ctime>
 
 extern "C" {
+#include <malloc.h>
 #include "bool_expr_lib.h"
 }
 
