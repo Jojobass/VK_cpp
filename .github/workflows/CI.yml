@@ -87,6 +87,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: my-artifact
+          path: cmake-build-debug
 
       - name: analyze coverage
         run: make coverage
@@ -130,6 +131,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: my-artifact
+          path: cmake-build-debug
 
       - name: run stress test
         run: cmake-build-debug/stress/stress_test
