@@ -71,6 +71,11 @@ jobs:
           cmake-build-debug/bool_expr_lib/successive/tests/test_bool_expr_successive
           cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: cmake-build-debug
+
   checks:
     needs: [ build_n_test ]
 
@@ -78,6 +83,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
 
       - name: analyze coverage
         run: make coverage
@@ -117,6 +126,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
 
       - name: run stress test
         run: cmake-build-debug/stress/stress_test
