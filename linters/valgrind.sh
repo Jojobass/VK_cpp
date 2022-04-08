@@ -28,6 +28,6 @@ print_header "RUN valgrind [bool_expr_successive_lib]"
 check_log "valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all cmake-build-debug/bool_expr_lib/successive/tests/test_bool_expr_successive" "no leaks are possible"
 
 print_header "RUN valgrind [bool_expr_parallel_lib]"
-check_log "valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel" "no leaks are possible"
+check_log "valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all cmake-build-debug/bool_expr_lib/parallel/tests/valgrind_tests/size_1 cmake-build-debug/bool_expr_lib/parallel/tests/valgrind_tests/size_2 cmake-build-debug/bool_expr_lib/parallel/tests/valgrind_tests/size_10" "no leaks are possible"
 
 print_header "VALGRIND SUCCESS"

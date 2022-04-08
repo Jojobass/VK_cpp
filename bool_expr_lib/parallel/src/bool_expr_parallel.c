@@ -56,6 +56,11 @@ int get_num_passed_(char *expr, int *arr, size_t arr_size) {
                 *num += get_part(polish, polish_size, &(arr[(arr_size / kNumOfProcesses) * i]),
                                  arr_size / kNumOfProcesses + arr_size % kNumOfProcesses);
             }
+            for (int j = 0; j < polish_size; ++j) {
+                free(polish[j]);
+            }
+            free(polish);
+            free(arr);
             exit(EXIT_SUCCESS);
         }
     }
@@ -82,6 +87,7 @@ int get_num_passed_(char *expr, int *arr, size_t arr_size) {
             free(polish[i]);
         }
         free(polish);
+        free(arr);
         perror("Unmapping error!\n");
         return -1;
     }

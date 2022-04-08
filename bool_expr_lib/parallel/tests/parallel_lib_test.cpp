@@ -34,11 +34,14 @@ TEST(GET_NUM_PASSED, size_2) {
 TEST(GET_NUM_PASSED, size_10) {
     int *arr = (int *) malloc(sizeof(int) * 10);
     char *expr = (char *) "x>1";
-    for(int i=0; i<10; ++i){
-        arr[i] = i-4;
+    for (int i = 0; i < 10; ++i) {
+        arr[i] = i - 4;
     }
     EXPECT_EQ(get_num_passed_(expr, arr, 10), 4);
     free(arr);
 }
 
-
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
