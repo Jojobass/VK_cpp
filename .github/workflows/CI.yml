@@ -54,84 +54,51 @@ jobs:
     - name: install scan-build
       run: sudo apt install clang-tools
 
-  build_n_test:
-    needs: [ dependencies ]
 
-    runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+    - name: build
+      run: make build
 
-      - name: build
-        run: make build
+    - name: run tests
+      run: |
+        cmake-build-debug/polish_notation_lib/int_comparison/tests/test_int_comp_polish_notation
+        cmake-build-debug/bool_expr_lib/successive/tests/test_bool_expr_successive
+        cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel
 
-      - name: run tests
-        run: |
-          cmake-build-debug/polish_notation_lib/int_comparison/tests/test_int_comp_polish_notation
-          cmake-build-debug/bool_expr_lib/successive/tests/test_bool_expr_successive
-          cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: cmake-build-debug
 
-  checks:
-    needs: [ build_n_test ]
+    - name: analyze coverage
+      run: make coverage
 
-    runs-on: ubuntu-latest
+    - name: codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: cmake-build-debug/coverage.txt # optional
+        flags: unittests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
 
-    steps:
-      - uses: actions/checkout@v3
+    - name: run linters
+      run: make check
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-          path: cmake-build-debug
+    - name: run valgrind
+      run: make valgrind
 
-      - name: analyze coverage
-        run: make coverage
+    - name: run sanitizer with address, undefined, leak
+      run: make sanitizer_address
 
-      - name: codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: cmake-build-debug/coverage.txt # optional
-          flags: unittests # optional
-          name: codecov-umbrella # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+    - name: run sanitizer with thread
+      run: make sanitizer_thread
 
-      - name: run linters
-        run: make check
+    - name: run fbinfer
+      run: make fbinfer
 
-      - name: run valgrind
-        run: make valgrind
+    - name: run scan-build
+      run: make scan-build
 
-      - name: run sanitizer with address, undefined, leak
-        run: make sanitizer_address
 
-      - name: run sanitizer with thread
-        run: make sanitizer_thread
 
-      - name: run fbinfer
-        run: make fbinfer
-
-      - name: run scan-build
-        run: make scan-build
-
-  stress_test:
-    needs: [ build_n_test ]
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-          path: cmake-build-debug
-
-      - name: run stress test
-        run: cmake-build-debug/stress/stress_test
+    - name: run stress test
+      run: cmake-build-debug/stress/stress_test
