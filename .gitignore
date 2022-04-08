@@ -1,2 +1,4 @@
 .idea
 cmake-build-debug
+sanitizer_binary
+infer-out

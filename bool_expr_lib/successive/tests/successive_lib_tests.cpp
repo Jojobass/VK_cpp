@@ -6,7 +6,8 @@ extern "C" {
 }
 
 TEST(GET_NUM_PASSED, size_1) {
-    int *arr = (int *) malloc(sizeof(int) * 1);
+    int *arr;
+    EXPECT_NE(arr = (int *) malloc(sizeof(int) * 1), nullptr);
     char *expr = (char *) "x>1";
     arr[0] = 1;
     EXPECT_EQ(get_num_passed(expr, arr, 1), 0);
@@ -17,7 +18,8 @@ TEST(GET_NUM_PASSED, size_1) {
 }
 
 TEST(GET_NUM_PASSED, size_2) {
-    int *arr = (int *) malloc(sizeof(int) * 2);
+    int *arr;
+    EXPECT_NE((arr = (int *) malloc(sizeof(int) * 2)), nullptr);
     char *expr = (char *) "x>1";
     arr[0] = 1;
     arr[1] = 0;
@@ -32,7 +34,8 @@ TEST(GET_NUM_PASSED, size_2) {
 }
 
 TEST(GET_NUM_PASSED, size_10) {
-    int *arr = (int *) malloc(sizeof(int) * 10);
+    int *arr;
+    EXPECT_NE((arr = (int *) malloc(sizeof(int) * 10)), nullptr);
     char *expr = (char *) "x>1";
     for(int i=0; i<10; ++i){
         arr[i] = i-4;

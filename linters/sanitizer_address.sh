@@ -22,6 +22,15 @@ function check_log() {
 }
 
 print_header "RUN sanitizers"
-check_log "g++ -Wall -g -pthread -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error tests/test_toys_search.cpp -Itoys_catalogue_lib -lgtest_main -lgtest -lpthread -lcat_lib -Lcmake-build-debug/toys_catalogue_lib -lgcov" "undefined reference"
+
+g++ -Wall -g -pthread -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error polish_notation_lib/int_comparison/tests/int_comp_tests.cpp -Ipolish_notation_lib/int_comparison/include -lgtest_main -lgtest -lpthread -lpolish_notation_int_comp_lib -Lcmake-build-debug/polish_notation_lib/int_comparison -lgcov -o sanitizer_binary
+check_log "./sanitizer_binary" "=ERROR"
+
+g++ -Wall -g -pthread -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error bool_expr_lib/successive/tests/successive_lib_tests.cpp -Ibool_expr_lib/include -Ipolish_notation_lib/int_comparison/include -lgtest_main -lgtest -lpthread -lbool_expr_successive_lib -Lcmake-build-debug/bool_expr_lib/successive -lpolish_notation_int_comp_lib -Lcmake-build-debug/polish_notation_lib/int_comparison -lgcov -o sanitizer_binary
+check_log "./sanitizer_binary" "=ERROR"
+
+g++ -Wall -g -pthread -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error bool_expr_lib/parallel/tests/parallel_lib_test.cpp -Ibool_expr_lib/include -Ipolish_notation_lib/int_comparison/include -lgtest_main -lgtest -lpthread -lbool_expr_parallel_lib -Lcmake-build-debug/bool_expr_lib/parallel -lpolish_notation_int_comp_lib -Lcmake-build-debug/polish_notation_lib/int_comparison -lgcov -o sanitizer_binary
+export LD_LIBRARY_PATH=cmake-build-debug/bool_expr_lib/parallel
+check_log "./sanitizer_binary" "=ERROR"
 
 print_header "SANITIZERS SUCCESS"

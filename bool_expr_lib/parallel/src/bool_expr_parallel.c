@@ -30,9 +30,10 @@ int get_num_passed_(char *expr, int *arr, size_t arr_size) {
     free(expr);
 
 //    максимальное количество одновременных процессов
-    int kNumOfProcesses = (int)sysconf(_SC_NPROCESSORS_ONLN);
+    int kNumOfProcesses = (int) sysconf(_SC_NPROCESSORS_ONLN);
 //    массив с PID всех процессов
     pid_t pids[kNumOfProcesses];
+    for (int i = 0; i < kNumOfProcesses; ++i) { pids[i] = -1; }
 //    массив, который могут читать и изменять все процессы
     int *num = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,
                     -1, 0);
