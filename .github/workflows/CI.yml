@@ -55,6 +55,8 @@ jobs:
       run: sudo apt install clang-tools
 
   build_n_test:
+    needs: [ dependencies ]
+
     runs-on: ubuntu-latest
 
     steps:
@@ -70,6 +72,7 @@ jobs:
           cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel
 
   checks:
+    needs: [ build_n_test ]
 
     runs-on: ubuntu-latest
 
@@ -108,6 +111,8 @@ jobs:
         run: make scan-build
 
   stress_test:
+    needs: [ build_n_test ]
+
     runs-on: ubuntu-latest
 
     steps:
