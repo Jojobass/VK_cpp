@@ -30,7 +30,16 @@ int get_num_passed_(char *expr, int *arr, size_t arr_size) {
     free(expr);
 
 //    максимальное количество одновременных процессов
-    int kNumOfProcesses = (int) sysconf(_SC_NPROCESSORS_ONLN);
+    printf("Please enter a number of cores you wish to use: ");
+    int kNumOfProcesses;
+    scanf("%d", &kNumOfProcesses);
+    if (kNumOfProcesses < 1) {
+        perror("Invalid number of cores!\n");
+        return -1;
+    }
+    if (kNumOfProcesses > (int) sysconf(_SC_NPROCESSORS_ONLN)) {
+        kNumOfProcesses = (int) sysconf(_SC_NPROCESSORS_ONLN);
+    }
 //    массив с PID всех процессов
     pid_t pids[kNumOfProcesses];
     for (int i = 0; i < kNumOfProcesses; ++i) { pids[i] = -1; }
