@@ -8,4 +8,4 @@
 
 int get_num_passed(char *expr, int *arr, size_t arr_size);
 
-int get_num_passed_(char *expr, int *arr, size_t arr_size);
+int get_num_passed_(char *expr, int *arr, size_t arr_size, int processes);

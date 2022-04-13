@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <sys/mman.h>
+#include <unistd.h>
 #include<time.h>
 #include<stdlib.h>
 #include "bool_expr_lib.h"
@@ -35,7 +37,10 @@ int resize_buffer_ints(int **buffer, size_t old_length, size_t new_length) {
 int read_file(FILE *stream_, int **arr) {
     int arr_length = 0;
     while (!feof(stream_)) {
-        resize_buffer_ints(arr, arr_length, arr_length + 1);
+        if (!resize_buffer_ints(arr, arr_length, arr_length + 1)) {
+            perror("File reading error!\n");
+            return 0;
+        }
         fscanf(stream_, "%d\n", &((*arr)[arr_length]));
         ++arr_length;
     }
@@ -72,7 +77,7 @@ int resize_buffer_string(char **buffer, size_t old_length, size_t new_length) {
 
 int get_string(FILE *input_file, char **string, char delimiter) {
     if (resize_buffer_string(string, 0, 1) != 1) {
-        free(*string);
+        if (*string != NULL) { free(*string); }
         return 1;
     }
 
@@ -96,6 +101,20 @@ int get_string(FILE *input_file, char **string, char delimiter) {
     return 0;
 }
 
+int choose_cores(){
+    printf("Please enter a number of cores you wish to use: ");
+    int kNumOfProcesses;
+    scanf("%d", &kNumOfProcesses);
+    if (kNumOfProcesses < 1) {
+        perror("Invalid number of cores!\n");
+        return -1;
+    }
+    if (kNumOfProcesses > (int) sysconf(_SC_NPROCESSORS_ONLN)) {
+        kNumOfProcesses = (int) sysconf(_SC_NPROCESSORS_ONLN);
+    }
+    return kNumOfProcesses;
+}
+
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         printf("Choose a preferred setup:\n1 - automatic\n2 - manual\n");
@@ -112,7 +131,7 @@ int main(int argc, char *argv[]) {
             if (get_num_passed("((70 < x) && (x <= 90))", probe, 1) != -2) {
                 printf("%d", get_num_passed("((70 < x) && (x <= 90))", big_arr, 100000000));
             } else {
-                printf("%d", get_num_passed_("((70 < x) && (x <= 90))", big_arr, 100000000));
+                printf("%d", get_num_passed_("((70 < x) && (x <= 90))", big_arr, 100000000, choose_cores()));
             }
 
             free(big_arr);
@@ -120,7 +139,7 @@ int main(int argc, char *argv[]) {
         }
         if (ch == 2) {
             printf("Please enter an expression, for which x between 1 and 100 may give an expected result\n");
-            char *expr;
+            char *expr = NULL;
             get_string(stdin, &expr, '\n');
 
             int *big_arr = malloc(100000000 * sizeof(int));
@@ -132,7 +151,7 @@ int main(int argc, char *argv[]) {
             if (get_num_passed(expr, probe, 1) != -2) {
                 printf("%d", get_num_passed(expr, big_arr, 100000000));
             } else {
-                printf("%d", get_num_passed_(expr, big_arr, 100000000));
+                printf("%d", get_num_passed_(expr, big_arr, 100000000, choose_cores()));
             }
 
             free(big_arr);
@@ -142,15 +161,21 @@ int main(int argc, char *argv[]) {
     }
     if (argc == 3) {
         FILE *stream = fopen(argv[2], "r");
-        int *big_arr;
+        int *big_arr = NULL;
         int arr_size = read_file(stream, &big_arr);
+        if (arr_size <= 0) {
+            if (big_arr != NULL) free(big_arr);
+            perror("File reading error!\n");
+            return 1;
+        }
         char *expr = argv[1];
         int probe[1] = {1};
         if (get_num_passed(expr, probe, 1) != -2) {
             printf("%d", get_num_passed(expr, big_arr, arr_size));
         } else {
-            printf("%d", get_num_passed_(expr, big_arr, arr_size));
+            printf("%d", get_num_passed_(expr, big_arr, arr_size, choose_cores()));
         }
+        fclose(stream);
     }
 
     return 0;
