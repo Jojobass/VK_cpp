@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [ HW-2 ]
+
+
+env:
+  INSTALL_LOCATION: .local
+
+jobs:
+  dependencies:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: cache dependencies
+      uses: actions/cache@v2
+      id: cache
+      with:
+        path: ${{ github.workspace }}/${{ env.INSTALL_LOCATION }}
+        key: ${{ runner.os }}-dependencies
+
+    - name: install essentials
+      run: |
+        sudo apt update -y && \
+        sudo apt install -y cppcheck clang-tidy python3-pip libc6-dbg cmake libgtest-dev lcov
+    
+    - name: install cpplint
+      run: pip install cpplint
+      
+    - name: install valgrind
+      run: sudo apt install valgrind
+    
+    - name: install GoogleTest
+      if: ${{ steps.cache.output.cache-hit != 'true' }}
+      run: |
+        cd ..
+        git clone https://github.com/google/googletest.git --branch release-1.10.0
+        cd googletest
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/$INSTALL_LOCATION
+        cmake --build build --config Release
+        cmake --build build --target install --config Release
+        
+    - name: install fbinfer
+      run: |
+        VERSION=1.1.0; \
+        curl -sSL "https://github.com/facebook/infer/releases/download/v$VERSION/infer-linux64-v$VERSION.tar.xz" \
+        | sudo tar -C /opt -xJ && \
+        sudo ln -s "/opt/infer-linux64-v$VERSION/bin/infer" /usr/local/bin/infer
+        
+    - name: install scan-build
+      run: sudo apt install clang-tools
+
+
+
+    - name: build
+      run: make build
+
+    - name: run tests
+      run: |
+        cmake-build-debug/polish_notation_lib/int_comparison/tests/test_int_comp_polish_notation
+        cmake-build-debug/bool_expr_lib/successive/tests/test_bool_expr_successive
+        cmake-build-debug/bool_expr_lib/parallel/tests/test_bool_expr_parallel
+
+
+
+    - name: analyze coverage
+      run: make coverage
+
+    - name: codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: cmake-build-debug/coverage.txt # optional
+        flags: unittests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
+        verbose: true # optional (default = false)
+
+    - name: run linters
+      run: make check
+
+    - name: run valgrind
+      run: make valgrind
+
+    - name: run sanitizer with address, undefined, leak
+      run: make sanitizer_address
+
+    - name: run sanitizer with thread
+      run: make sanitizer_thread
+
+    - name: run fbinfer
+      run: make fbinfer
+
+    - name: run scan-build
+      run: make scan-build
+
+
+
+    - name: run stress test
+      run: cmake-build-debug/stress/stress_test
