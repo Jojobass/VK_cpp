@@ -101,7 +101,7 @@ int get_string(FILE *input_file, char **string, char delimiter) {
     return 0;
 }
 
-int choose_cores(){
+int choose_cores() {
     printf("Please enter a number of cores you wish to use: ");
     int kNumOfProcesses;
     scanf("%d", &kNumOfProcesses);
